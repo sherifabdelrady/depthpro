@@ -1,5 +1,9 @@
 # DepthPro — Monocular Depth Estimation
 
+[![CI](https://github.com/sherifabdelrady/depthpro/actions/workflows/ci.yml/badge.svg)](https://github.com/sherifabdelrady/depthpro/actions) ![License](https://img.shields.io/badge/license-MIT-green) ![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![metric](https://img.shields.io/badge/metric-δ1%2093.2%-yellowgreen)
+
+
+
 > DPT + MiDaS v3.1 · δ1 93.2% · RMSE 0.412m on NYUv2 · SILog 10.8 on KITTI
 
 ## Overview
