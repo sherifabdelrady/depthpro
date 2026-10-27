@@ -1,4 +1,4 @@
-"""DepthPro — Monocular Depth Estimation (DPT + MiDaS-style)"""
+﻿"""DepthPro â€” Monocular Depth Estimation (DPT + MiDaS-style)"""
 import torch, torch.nn as nn, numpy as np, cv2
 import torchvision.transforms as T
 from PIL import Image
@@ -29,8 +29,15 @@ def estimate_depth(img_path: str, output_path: str = None, device: str = "cpu"):
     tensor = transform(img).unsqueeze(0).to(device)
     feats = encoder.forward_features(tensor)
     if feats.dim() == 3:
-        b, n, c = feats.shape; h = w = int(n**0.5)
-        feats = feats.permute(0,2,1).view(b, c, h, w)
+        b, n, c = feats.shape
+        # ViT may include a CLS token at position 0: shape [B, 1+N_patches, C]
+        # Check if n is a perfect square; if not, strip one token (the CLS token).
+        h_f = int(n**0.5)
+        if h_f * h_f != n:
+            feats = feats[:, 1:, :]   # strip CLS token
+            b, n, c = feats.shape
+            h_f = int(n**0.5)
+        feats = feats.permute(0, 2, 1).view(b, c, h_f, h_f)
     depth = head(feats)
     depth = torch.nn.functional.interpolate(depth, (orig_h, orig_w), mode="bilinear", align_corners=True)
     depth_np = depth.squeeze().cpu().numpy()
